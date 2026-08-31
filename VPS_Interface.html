@@ -337,13 +337,17 @@
     .stock-row-main { display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr 1fr; padding: 16px; align-items: center; cursor: pointer; transition: background 0.15s; }
     .stock-row-main:hover { background: #fafafa; }
     .stock-ticker { display: flex; align-items: center; gap: 4px; }
-    .stock-ticker .name { font-size: 15px; font-weight: 700; color: #c62828; letter-spacing: -0.01em; }
+    .stock-ticker .name { font-size: 15px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.01em; }
+    .stock-ticker .name.positive { color: #1a8a3f; }
+    .stock-ticker .name.negative { color: #c62828; }
+    .stock-ticker .name.neutral { color: #1a1a1a; }
     .stock-ticker .arrow { font-size: 10px; color: #aaa; transition: transform 0.2s; }
     .stock-ticker .arrow.up { transform: rotate(180deg); }
     .stock-row-main .col-val { text-align: center; font-size: 14.5px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.02em; }
     .stock-row-main .col-loss { text-align: right; font-size: 14.5px; font-weight: 700; letter-spacing: -0.02em; }
     .col-loss.negative { color: #c62828; }
     .col-loss.positive { color: #1a8a3f; }
+    .col-loss.neutral { color: #1a1a1a; }
 
     /* ===== EXPANDED DETAIL ===== */
     .stock-detail { display: none; padding: 0 16px 16px; animation: slideDown 0.2s ease; }
@@ -1088,8 +1092,14 @@
       let h = '';
       stocks.forEach(s => {
         const c = calcStock(s);
-        const pnlCls = c.pnlPct >= 0 ? 'positive' : 'negative';
-        const pnlSign = c.pnlPct >= 0 ? '+' : '';
+        let pnlCls = 'neutral';
+        let pnlSign = '';
+        if (c.pnlAmount > 0) {
+          pnlCls = 'positive';
+          pnlSign = '+';
+        } else if (c.pnlAmount < 0) {
+          pnlCls = 'negative';
+        }
         const dc = c.pnlAmount >= 0 ? 'profit' : 'loss';
 
         const displayCostPrice = isDataMasked ? '***' : formatPrice(s.costPrice);
@@ -1118,7 +1128,7 @@
         h += `<div class="stock-row" data-stock-id="${s.id}">
           <div class="stock-row-main" onclick="toggleStockDetail('${s.id}')">
             <div class="stock-ticker">
-              <span class="name">${s.ticker}</span>
+              <span class="name ${pnlCls}">${s.ticker}</span>
               <i class="fas fa-chevron-down arrow ${s.expanded ? 'up' : ''}" id="arrow-${s.id}"></i>
             </div>
             <div class="col-val">${displayCostPrice}</div>

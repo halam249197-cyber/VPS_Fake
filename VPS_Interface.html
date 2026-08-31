@@ -360,14 +360,13 @@
     .col-loss.neutral { color: #1a1a1a; }
 
     /* ===== EXPANDED DETAIL ===== */
-    .stock-detail { display: none; padding: 0 16px 16px; animation: slideDown 0.2s ease; }
+    .stock-detail { display: none; padding: 0 16px 16px; }
     .stock-detail.show { display: block; }
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
 
     /* 1. Sub-header Row */
     .detail-summary {
       display: grid; grid-template-columns: 1fr 1fr 1fr;
-      background: #f6f7f9; border-radius: 8px;
+      background: #F4F5F9; border-radius: 8px;
       padding: 8px 8px; margin-bottom: 6px;
     }
     .detail-summary-item { text-align: center; }
@@ -392,7 +391,7 @@
       padding: 0;
     }
     .detail-card {
-      background: #f6f7f9;
+      background: #F4F5F9;
       border-radius: 8px;
       box-sizing: border-box;
     }
@@ -1104,13 +1103,15 @@
         const c = calcStock(s);
         let pnlCls = 'neutral';
         let pnlSign = '';
+        let detailDsCls = '';
         if (c.pnlAmount > 0) {
           pnlCls = 'positive';
           pnlSign = '+';
+          if (!isDataMasked) detailDsCls = 'profit';
         } else if (c.pnlAmount < 0) {
           pnlCls = 'negative';
+          if (!isDataMasked) detailDsCls = 'loss';
         }
-        const dc = c.pnlAmount >= 0 ? 'profit' : 'loss';
 
         const displayCostPrice = isDataMasked ? '***' : formatPrice(s.costPrice);
         const displayMarketPrice = formatPrice(s.marketPrice);
@@ -1121,7 +1122,6 @@
         const detailTotalCost = isDataMasked ? '***' : formatNumber(c.totalCost);
         const detailTotalMarket = isDataMasked ? '***' : formatNumber(c.totalMarket);
         const detailPnlAmount = isDataMasked ? '***' : formatNumber(c.pnlAmount);
-        const detailDsCls = isDataMasked ? '' : dc;
 
         const isVolMasked = isVolumeHidden;
         const vTongKL = isVolMasked ? '***' : formatVolume(s.volume);
@@ -1434,6 +1434,27 @@
           logging: false,
           imageTimeout: 0,
           onclone: function(clonedDoc) {
+            // Tắt toàn bộ animation và transition trong clone để màu sắc & opacity được render 100% nguyên bản
+            const style = clonedDoc.createElement('style');
+            style.innerHTML = `
+              *, *::before, *::after {
+                animation: none !important;
+                -webkit-animation: none !important;
+                transition: none !important;
+                -webkit-transition: none !important;
+              }
+              .stock-detail {
+                opacity: 1 !important;
+                transform: none !important;
+              }
+              .stock-detail.show {
+                display: block !important;
+                opacity: 1 !important;
+                transform: none !important;
+              }
+            `;
+            clonedDoc.head.appendChild(style);
+
             const w = clonedDoc.getElementById('phoneWrapper');
             if (w) {
               w.style.boxShadow = 'none';

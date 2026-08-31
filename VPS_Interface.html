@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VPS - Cổ phiếu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', 'Roboto', sans-serif;
+      background-color: #f0f0f0;
+      display: flex; justify-content: center; align-items: flex-start;
+      min-height: 100vh; padding: 30px 20px;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+      line-height: 1.4; letter-spacing: -0.01em;
+    }
+    .app-container { display: flex; gap: 28px; align-items: flex-start; }
+
+    /* ===== PHONE WRAPPER ===== */
+    .phone-wrapper {
+      width: 375px; height: 812px; background: #ffffff;
+      border-radius: 40px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.12), 0 8px 20px rgba(0,0,0,0.06), inset 0 0 0 1.5px rgba(0,0,0,0.05);
+      overflow: hidden; position: relative;
+      display: flex; flex-direction: column; flex-shrink: 0;
+    }
+
+    /* ============================================================
+       iOS STATUS BAR — Pixel-Perfect Apple Standard
+       ============================================================ */
+    .ios-statusbar {
+      height: 44px;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #ffffff;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .statusbar-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding-left: 30px;
+    }
+    .statusbar-time {
+      font-family: -apple-system-rounded, "SF Pro Rounded", "Nunito", -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #000000;
+      letter-spacing: -0.2px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .statusbar-notifs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .statusbar-notifs .notif-icon {
+      width: 15px;
+      height: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .statusbar-notifs .notif-icon svg {
+      width: 13px;
+      height: 13px;
+      display: block;
+    }
+
+    .statusbar-right {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding-right: 30px;
+      color: #000000;
+      font-family: -apple-system-rounded, "SF Pro Rounded", "Nunito", -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    }
+
+    /* iOS Cellular Signal - Exact match to reference image */
+    .ios-signal-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 1.5px;
+      width: 18.5px;
+      height: 12.5px;
+      box-sizing: border-box;
+    }
+    .ios-signal-bars .bar {
+      width: 3.2px;
+      background-color: currentColor;
+      border-radius: 1.6px; /* Full stadium pill shape */
+    }
+    .ios-signal-bars .bar:nth-child(1) { height: 4px; }
+    .ios-signal-bars .bar:nth-child(2) { height: 6.5px; }
+    .ios-signal-bars .bar:nth-child(3) { height: 9.5px; }
+    .ios-signal-bars .bar:nth-child(4) { height: 12.5px; opacity: 0.3; }
+
+    /* iOS Battery - Gray pill background with dynamic black fill and centered % text */
+    .ios-battery-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-right: 2px;
+    }
+    .ios-battery-pill {
+      width: 25px;
+      height: 13px;
+      background-color: rgba(142, 142, 147, 0.45);
+      border: none;
+      border-radius: 4px;
+      position: relative;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .ios-battery-pill .battery-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      height: 100%;
+      background-color: #0C0C0D;
+      width: 73%;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1;
+    }
+    .ios-battery-pill .battery-pct-svg {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      display: block;
+      pointer-events: none;
+    }
+    .ios-battery-wrap .battery-terminal {
+      width: 1.6px;
+      height: 5px;
+      background-color: #8E8E93;
+      border-radius: 0 1.6px 1.6px 0;
+      margin-left: 1px;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 6px 16px 8px; background: #fff; flex-shrink: 0;
+    }
+    .header .back-btn {
+      font-size: 20px; color: #1a1a1a; cursor: pointer;
+      width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+    }
+    .header .title { font-size: 18px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.02em; }
+    .header .search-btn {
+      font-size: 19px; color: #1a1a1a; cursor: pointer;
+      width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ===== ACCOUNT TABS ===== */
+    .account-tabs {
+      display: flex; border-bottom: 1px solid #e8e8e8;
+      background: #fff; flex-shrink: 0; padding: 0 16px;
+    }
+    .account-tab {
+      flex: 1; text-align: center; padding: 10px 4px 12px;
+      font-size: 14px; font-weight: 400; color: #666;
+      cursor: pointer; position: relative; display: flex;
+      align-items: center; justify-content: center; gap: 5px;
+      transition: color 0.2s; letter-spacing: -0.01em; line-height: 1.3;
+    }
+    .account-tab.active { color: #1a1a1a; font-weight: 600; }
+    .account-tab.active::after {
+      content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
+      height: 2.5px; background: #7A22C2; border-radius: 3px 3px 0 0;
+    }
+    .tab-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 18px; height: 18px; border-radius: 9px;
+      font-size: 11px; font-weight: 600; padding: 0 5px;
+    }
+    .account-tab.active .tab-badge { background: #7A22C2; color: #fff; }
+    .account-tab:not(.active) .tab-badge { background: #e0e0e0; color: #666; }
+
+    /* ===== SCROLLABLE CONTENT ===== */
+    .content-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; background: #fff; scrollbar-width: none; }
+    .content-scroll::-webkit-scrollbar { display: none; }
+    .swipe-indicator { display: flex; justify-content: center; padding: 10px 0 4px; }
+    .swipe-indicator .bar { width: 40px; height: 4px; background: #d0d0d0; border-radius: 2px; }
+    .portfolio-tabs { display: flex; gap: 16px; padding: 12px 16px 8px; align-items: baseline; }
+    .portfolio-tab { font-size: 18px; font-weight: 600; color: #1a1a1a; cursor: pointer; letter-spacing: -0.015em; line-height: 1.2; }
+    .portfolio-tab.inactive { font-size: 15px; font-weight: 400; color: #8E8E93; letter-spacing: -0.01em; }
+
+    /* ===== SUMMARY CARD ===== */
+    .summary-card {
+      margin: 6px 16px 10px;
+      border: none;
+      border-radius: 12px;
+      padding: 11px 14px;
+      background-color: #F4F5F9;
+      box-shadow: none;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2.5px 0;
+      line-height: 1.35;
+    }
+    .summary-row .label {
+      font-size: 13.5px;
+      font-weight: 400;
+      color: #333;
+      display: flex;
+      align-items: center;
+      letter-spacing: -0.01em;
+    }
+    .summary-row .label .info-icon {
+      color: #b5b5b5;
+      font-size: 12px;
+      cursor: pointer;
+      margin-left: 4px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .summary-row .label .eye-icon {
+      font-size: 13.5px;
+      color: #888;
+      cursor: pointer;
+      margin-left: 5px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .summary-row .value {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #1a1a1a;
+      text-align: right;
+      letter-spacing: -0.01em;
+    }
+    .summary-row .value.loss { color: #c62828; }
+    .summary-row .value.profit { color: #1a8a3f; }
+    .summary-row .value.neutral { color: #1a1a1a; font-weight: 600; }
+    .summary-main-value {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .summary-main-value .value {
+      font-size: 13.5px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+    }
+    .loss-badge {
+      display: inline-block;
+      border: 1px solid #c62828;
+      border-radius: 10px;
+      padding: 0.5px 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #c62828;
+      margin-top: 2px;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+    .loss-badge.profit-badge {
+      border-color: #1a8a3f;
+      color: #1a8a3f;
+    }
+
+    /* ===== CONTROLS ===== */
+    .controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 16px 4px;
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: #333333;
+      cursor: pointer;
+      letter-spacing: -0.01em;
+      user-select: none;
+    }
+    .checkbox-box {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid #c8c8c8;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+      box-sizing: border-box;
+    }
+    .checkbox-box.checked {
+      background: #7A22C2;
+      border-color: #7A22C2;
+    }
+    .checkbox-box svg {
+      display: none;
+      width: 11px;
+      height: 11px;
+    }
+    .checkbox-box.checked svg {
+      display: block;
+    }
+    .sell-multi-btn { border: 1.5px solid #c62828; border-radius: 20px; padding: 8px 20px; font-size: 14px; font-weight: 500; color: #c62828; background: #fff; cursor: pointer; transition: all 0.2s; font-family: inherit; letter-spacing: -0.01em; }
+    .sell-multi-btn:hover { background: #fef0f0; }
+
+    /* ===== STOCK TABLE ===== */
+    .stock-table-header { display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr 1fr; padding: 12px 16px 8px; font-size: 12px; font-weight: 500; color: #999; text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.3; }
+    .stock-table-header .col-kl { display: flex; align-items: center; justify-content: center; gap: 2px; }
+    .stock-table-header .col-kl .sort-icon { font-size: 10px; }
+    .stock-table-header > div:nth-child(2), .stock-table-header > div:nth-child(3), .stock-table-header > div:nth-child(4) { text-align: center; }
+    .stock-table-header > div:last-child { text-align: right; }
+    .stock-row { border-top: 1px solid #f0f0f0; }
+    .stock-row-main { display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr 1fr; padding: 16px; align-items: center; cursor: pointer; transition: background 0.15s; }
+    .stock-row-main:hover { background: #fafafa; }
+    .stock-ticker { display: flex; align-items: center; gap: 4px; }
+    .stock-ticker .name { font-size: 15px; font-weight: 700; color: #c62828; letter-spacing: -0.01em; }
+    .stock-ticker .arrow { font-size: 10px; color: #aaa; transition: transform 0.2s; }
+    .stock-ticker .arrow.up { transform: rotate(180deg); }
+    .stock-row-main .col-val { text-align: center; font-size: 14.5px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.02em; }
+    .stock-row-main .col-loss { text-align: right; font-size: 14.5px; font-weight: 700; letter-spacing: -0.02em; }
+    .col-loss.negative { color: #c62828; }
+    .col-loss.positive { color: #1a8a3f; }
+
+    /* ===== EXPANDED DETAIL ===== */
+    .stock-detail { display: none; padding: 0 16px 16px; animation: slideDown 0.2s ease; }
+    .stock-detail.show { display: block; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* 1. Sub-header Row */
+    .detail-summary {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      background: #f6f7f9; border-radius: 8px;
+      padding: 8px 8px; margin-bottom: 6px;
+    }
+    .detail-summary-item { text-align: center; }
+    .detail-summary-item .ds-label {
+      font-size: 11px; font-weight: 400; color: #777;
+      margin-bottom: 2px; letter-spacing: -0.01em; line-height: 1.2;
+    }
+    .detail-summary-item .ds-value {
+      font-size: 12.5px; font-weight: 700; color: #1a1a1a;
+      letter-spacing: -0.02em; line-height: 1.2;
+    }
+    .detail-summary-item .ds-value.loss { color: #c62828; }
+    .detail-summary-item .ds-value.profit { color: #1a8a3f; }
+
+    /* 2. Data Grid Container - 2 Separate Columns */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      margin-bottom: 8px;
+      background: transparent;
+      padding: 0;
+    }
+    .detail-card {
+      background: #f6f7f9;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    .detail-card-left {
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      gap: 4px;
+    }
+    .detail-col-right {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      height: 100%;
+    }
+    .detail-card-top {
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .detail-card-bottom {
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      justify-content: space-between;
+    }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      line-height: 1.3;
+      font-size: 11.5px;
+    }
+    .detail-row .dr-label {
+      color: #555;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      letter-spacing: -0.01em;
+    }
+    .detail-row .dr-label.bold {
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+    .detail-row .dr-label .info-icon {
+      font-size: 10.5px;
+      color: #999;
+    }
+    .detail-row .dr-value {
+      font-weight: 500;
+      color: #1a1a1a;
+      text-align: right;
+      letter-spacing: -0.01em;
+    }
+    .detail-row .dr-value.bold {
+      font-weight: 700;
+    }
+    .detail-section-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 2px;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+    }
+
+    /* 3. Action Buttons */
+    .detail-actions { display: flex; gap: 8px; }
+    .detail-btn {
+      flex: 1; padding: 6px 10px; border-radius: 20px;
+      font-size: 12px; font-weight: 600; text-align: center;
+      background: #fff; cursor: pointer; font-family: inherit;
+      transition: all 0.2s; outline: none; letter-spacing: -0.01em;
+    }
+    .detail-btn-buy { border: 1.2px solid #1a8a3f; color: #1a8a3f; }
+    .detail-btn-buy:hover { background: #eefbee; }
+    .detail-btn-sell { border: 1.2px solid #c62828; color: #c62828; }
+    .detail-btn-sell:hover { background: #fdf2f2; }
+    .detail-btn-info { border: 1.2px solid #d0d0d0; color: #222; }
+    .detail-btn-info:hover { background: #f5f5f5; }
+
+    /* ===== BOTTOM ===== */
+    .bottom-actions {
+      display: flex;
+      gap: 12px;
+      padding: 8px 16px;
+      background: #fff;
+      border-top: 1px solid #eeeeee;
+      flex-shrink: 0;
+    }
+    .btn-buy, .btn-sell {
+      flex: 1;
+      height: 42px;
+      border: none;
+      border-radius: 21px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 0.04em;
+      transition: opacity 0.2s, transform 0.1s;
+      font-family: inherit;
+    }
+    .btn-buy { background: #00a854; }
+    .btn-sell { background: #e03838; }
+    .btn-buy:hover, .btn-sell:hover { opacity: 0.92; }
+    .btn-buy:active, .btn-sell:active { transform: scale(0.98); }
+
+    .bottom-nav {
+      display: flex;
+      background: #ffffff;
+      border-top: 1px solid #eeeeee;
+      padding: 7px 0 12px;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      color: #8E8E93;
+      transition: color 0.15s;
+    }
+    .nav-item .nav-icon-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+    }
+    .nav-item.active {
+      color: #7A22C2;
+    }
+    .nav-item .nav-label {
+      font-size: 10.5px;
+      font-weight: 500;
+      color: #8E8E93;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+    .nav-item.active .nav-label {
+      color: #7A22C2;
+      font-weight: 700;
+    }
+    .nav-badge-new {
+      position: absolute;
+      top: -5px;
+      right: -15px;
+      background: #7A22C2;
+      color: #ffffff;
+      font-size: 8.5px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 999px;
+      letter-spacing: 0.02em;
+      line-height: 1.15;
+      pointer-events: none;
+      box-shadow: 0 1px 3px rgba(122,34,194,0.25);
+    }
+    .no-stocks { text-align: center; padding: 40px 20px; color: #aaa; font-size: 14px; }
+    .no-stocks i { font-size: 32px; margin-bottom: 10px; display: block; color: #ddd; }
+
+    /* ============================================================
+       ADMIN PANEL
+       ============================================================ */
+    .admin-panel {
+      width: 380px; max-height: 812px; background: #fff; border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+      display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0;
+    }
+    .admin-header { padding: 20px 20px 16px; border-bottom: 1px solid #eee; flex-shrink: 0; }
+    .admin-header h2 { font-size: 17px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px; }
+    .admin-header h2 i { color: #c62828; font-size: 16px; }
+    .admin-header p { font-size: 12.5px; color: #888; margin-top: 4px; font-weight: 400; line-height: 1.4; }
+    .admin-scroll { flex: 1; overflow-y: auto; padding: 0; scrollbar-width: thin; scrollbar-color: #ddd transparent; }
+    .admin-scroll::-webkit-scrollbar { width: 4px; }
+    .admin-scroll::-webkit-scrollbar-thumb { background: #ddd; border-radius: 2px; }
+    .admin-section { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; }
+    .admin-section:last-child { border-bottom: none; }
+    .admin-section-title { font-size: 12px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .admin-section-title i { font-size: 11px; color: #c62828; }
+
+    /* Status Bar Config */
+    .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .config-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+    /* Admin Stock Tabs */
+    .admin-stock-tabs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 2px 2px 8px;
+      margin-bottom: 12px;
+      scrollbar-width: thin;
+      scrollbar-color: #ddd transparent;
+    }
+    .admin-stock-tabs::-webkit-scrollbar {
+      height: 3px;
+    }
+    .admin-stock-tabs::-webkit-scrollbar-thumb {
+      background: #ddd;
+      border-radius: 2px;
+    }
+    .admin-tab-btn {
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid #e0e0e0;
+      background: #f7f7f9;
+      color: #666;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      flex-shrink: 0;
+    }
+    .admin-tab-btn:hover {
+      background: #eee;
+      color: #1a1a1a;
+    }
+    .admin-tab-btn.active {
+      background: #7A22C2;
+      border-color: #7A22C2;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(122,34,194,0.25);
+    }
+    .admin-tab-add {
+      padding: 6px 10px;
+      border-radius: 20px;
+      border: 1px dashed #7A22C2;
+      background: #faf5ff;
+      color: #7A22C2;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      flex-shrink: 0;
+    }
+    .admin-tab-add:hover {
+      background: #f3e8ff;
+    }
+
+    /* Stock Editor Card */
+    .stock-editor {
+      border: 1px solid #e8e8e8;
+      border-radius: 10px;
+      padding: 14px;
+      position: relative;
+      background: #fff;
+      display: none;
+    }
+    .stock-editor.active {
+      display: block;
+      animation: tabFadeIn 0.15s ease-out;
+    }
+    @keyframes tabFadeIn {
+      from { opacity: 0; transform: translateY(2px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .stock-editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .stock-editor-title { font-size: 14px; font-weight: 700; color: #7A22C2; letter-spacing: -0.01em; }
+    .stock-editor-remove { height: 28px; padding: 0 10px; border: none; background: #fef0f0; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; color: #c62828; font-size: 11.5px; font-weight: 600; font-family: inherit; transition: all 0.2s; }
+    .stock-editor-remove:hover { background: #f8d7d7; }
+    .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .editor-field { display: flex; flex-direction: column; gap: 4px; }
+    .editor-field.full { grid-column: 1 / -1; }
+    .editor-label { font-size: 11px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 0.04em; }
+    .editor-input { width: 100%; padding: 8px 10px; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 13.5px; font-weight: 500; color: #1a1a1a; font-family: inherit; outline: none; transition: border-color 0.2s; letter-spacing: -0.01em; }
+    .editor-input:focus { border-color: #7A22C2; box-shadow: 0 0 0 2px rgba(122,34,194,0.08); }
+    .editor-input::placeholder { color: #ccc; }
+    .editor-input[type="number"] { -moz-appearance: textfield; }
+    .editor-input[type="number"]::-webkit-inner-spin-button, .editor-input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+    /* Admin Buttons */
+    .admin-actions { padding: 16px 20px; border-top: 1px solid #eee; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; }
+    .btn-add-stock { width: 100%; padding: 10px; border: 1.5px dashed #c62828; border-radius: 8px; background: #fff; color: #c62828; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; letter-spacing: -0.01em; }
+    .btn-add-stock:hover { background: #fef6f6; }
+    .admin-btn-row { display: flex; gap: 8px; }
+    .btn-update { flex: 1; padding: 13px; border: none; border-radius: 8px; background: #c62828; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; letter-spacing: 0.02em; }
+    .btn-update:hover { background: #b71c1c; }
+    .btn-update:active { transform: scale(0.98); }
+    .btn-screenshot { flex: 1; padding: 13px; border: none; border-radius: 8px; background: #1a1a1a; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; letter-spacing: 0.02em; }
+    .btn-screenshot:hover { background: #333; }
+    .btn-screenshot:active { transform: scale(0.98); }
+    .btn-screenshot.capturing { opacity: 0.7; pointer-events: none; }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1a1a1a; color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 13px; font-weight: 500; opacity: 0; transition: all 0.3s ease; z-index: 1000; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast i { color: #4caf50; }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+
+    <!-- ======================== PHONE ======================== -->
+    <div class="phone-wrapper" id="phoneWrapper">
+
+      <!-- iOS STATUS BAR -->
+      <div class="ios-statusbar">
+        <div class="statusbar-left">
+          <span class="statusbar-time" id="statusbarTime">9:41</span>
+        </div>
+        <div class="statusbar-right">
+          <!-- 1. Cellular Signal (connection+mobile+signal.svg) -->
+          <svg width="18.5" height="12.5" viewBox="4 18 120 106" fill="currentColor" style="display: block;">
+            <path d="M18.863,86.36h-5.974C7.98,86.36,4,90.326,4,95.218v19.915c0,4.897,3.98,8.86,8.889,8.86h5.974 c4.909,0,8.889-3.963,8.889-8.86V95.218C27.751,90.326,23.771,86.36,18.863,86.36z"/>
+            <path d="M51.299,63.884h-7.034c-4.907,0-8.887,3.966-8.887,8.858v1.405v39.586v1.404 c0,4.896,3.98,8.859,8.887,8.859h7.034c4.909,0,8.889-3.963,8.889-8.859v-1.404V74.147v-1.405 C60.188,67.85,56.208,63.884,51.299,63.884z"/>
+            <path d="M83.206,41.401H76.17c-4.905,0-8.886,3.967-8.886,8.86v2.833v59.213v2.833c0,4.897,3.98,8.86,8.886,8.86 h7.036c4.909,0,8.888-3.963,8.888-8.86v-2.833V53.094v-2.833C92.094,45.369,88.115,41.401,83.206,41.401z"/>
+            <path d="M115.114,18.922h-7.036c-4.906,0-8.886,3.967-8.886,8.86v25.312v36.733v25.313 c0,4.897,3.979,8.86,8.886,8.86h7.036c4.909,0,8.886-3.963,8.886-8.86V89.827V53.094V27.782 C124,22.889,120.023,18.922,115.114,18.922z"/>
+          </svg>
+
+          <!-- 2. WiFi (ios-wifi.svg) -->
+          <svg width="17" height="12.5" viewBox="20 85 472 340" fill="currentColor" style="display: block; margin: 0 0.5px;">
+            <path d="M256 96c-81.5 0-163 33.6-221.5 88.3-3.3 3-3.4 8.1-.3 11.4l26.7 27.9c3.1 3.3 8.3 3.4 11.6.3 23.3-21.6 49.9-38.8 79.3-51 33-13.8 68.1-20.7 104.3-20.7s71.3 7 104.3 20.7c29.4 12.3 56 29.4 79.3 51 3.3 3.1 8.5 3 11.6-.3l26.7-27.9c3.1-3.2 3-8.3-.3-11.4C419 129.6 337.5 96 256 96z"/>
+            <path d="M113.2 277.5l28.6 28.3c3.1 3 8 3.2 11.2.3 28.3-25.1 64.6-38.9 102.9-38.9s74.6 13.7 102.9 38.9c3.2 2.9 8.1 2.7 11.2-.3l28.6-28.3c3.3-3.3 3.2-8.6-.3-11.7-37.5-33.9-87.6-54.6-142.5-54.6s-105 20.7-142.5 54.6c-3.3 3.1-3.4 8.4-.1 11.7z"/>
+            <path d="M256 324.2c-23.4 0-44.6 9.8-59.4 25.5-3 3.2-2.9 8.1.2 11.2l53.4 52.7c3.2 3.2 8.4 3.2 11.6 0l53.4-52.7c3.1-3.1 3.2-8 .2-11.2-14.8-15.6-36-25.5-59.4-25.5z"/>
+          </svg>
+
+          <!-- 3. Battery -->
+          <div class="ios-battery-wrap" id="statusbarBattery">
+            <div class="ios-battery-pill">
+              <div class="battery-fill" id="batteryFill" style="width: 73%;"></div>
+              <svg class="battery-pct-svg" viewBox="0 0 25 13" width="25" height="13">
+                <text x="12.5" y="7.2" text-anchor="middle" dominant-baseline="middle" id="batteryText" fill="#FFFFFF" font-family="-apple-system-rounded, 'SF Pro Rounded', -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="12" font-weight="700">73</text>
+              </svg>
+            </div>
+            <div class="battery-terminal"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HEADER -->
+      <div class="header">
+        <div class="back-btn"><i class="fas fa-chevron-left"></i></div>
+        <div class="title">Cổ phiếu</div>
+        <div class="search-btn"><i class="fas fa-search"></i></div>
+      </div>
+
+      <!-- ACCOUNT TABS -->
+      <div class="account-tabs">
+        <div class="account-tab active" data-tab="1">Tài khoản <span class="tab-badge">1</span></div>
+        <div class="account-tab" data-tab="3">Tài khoản <span class="tab-badge">3</span></div>
+        <div class="account-tab" data-tab="6">Tài khoản <span class="tab-badge">6</span></div>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="content-scroll">
+        <div class="swipe-indicator"><div class="bar"></div></div>
+        <div class="portfolio-tabs">
+          <div class="portfolio-tab active">Danh mục nắm giữ</div>
+          <div class="portfolio-tab inactive">Cơ cấu danh mục</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-row">
+            <div class="label">Lãi lỗ danh mục <i class="fas fa-eye-slash eye-icon" id="toggleEye"></i></div>
+            <div class="summary-main-value">
+              <div class="value loss" id="summary-pnl-amount">-63,061,964</div>
+              <div id="summary-pnl-badge-wrap"><span class="loss-badge" id="summary-pnl-pct">-19.65%</span></div>
+            </div>
+          </div>
+          <div class="summary-row">
+            <div class="label">Lãi/Lỗ hôm nay <i class="fas fa-info-circle info-icon"></i></div>
+            <div class="value neutral" id="summary-today">0</div>
+          </div>
+          <div class="summary-row">
+            <div class="label">Tổng vốn <i class="fas fa-info-circle info-icon"></i></div>
+            <div class="value neutral" id="summary-total-cost">320,867,364</div>
+          </div>
+          <div class="summary-row">
+            <div class="label">Tổng giá thị trường</div>
+            <div class="value neutral" id="summary-total-market">257,805,400</div>
+          </div>
+        </div>
+        <div class="controls-row">
+          <div class="checkbox-label" id="toggleHideVol">
+            <div class="checkbox-box" id="hideVolCheckbox">
+              <svg viewBox="0 0 12 12" fill="none">
+                <path d="M2.2 6.2L4.8 8.8L9.8 3.2" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2"/>
+              </svg>
+            </div>
+            <span>Ẩn khối lượng</span>
+          </div>
+          <button class="sell-multi-btn">Bán nhiều mã</button>
+        </div>
+        <div class="stock-table-header">
+          <div>MÃ CP</div><div>GIÁ VỐN</div><div>GIÁ TT</div>
+          <div class="col-kl">KL <i class="fas fa-sort sort-icon"></i></div><div>LÃI/LỖ</div>
+        </div>
+        <div id="stock-list"></div>
+      </div>
+
+      <div class="bottom-actions"><button class="btn-buy">MUA</button><button class="btn-sell">BÁN</button></div>
+      <div class="bottom-nav">
+        <!-- 1. Trang chủ -->
+        <div class="nav-item active">
+          <div class="nav-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9.5L12 2.5l9 7V20a1.5 1.5 0 0 1-1.5 1.5h-4A1.5 1.5 0 0 1 14 20v-4.5a2 2 0 0 0-4 0V20a1.5 1.5 0 0 1-1.5 1.5h-4A1.5 1.5 0 0 1 3 20V9.5z"/>
+            </svg>
+          </div>
+          <span class="nav-label">Trang chủ</span>
+        </div>
+
+        <!-- 2. Thị trường -->
+        <div class="nav-item">
+          <div class="nav-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Đường xu hướng zigzag: đoạn 3 giống hệt đoạn 1 -->
+              <path d="M3.5 9.5l5.5-5 5.5 5 5.5-5"/>
+              <!-- Các cột đứng phía dưới không chạm vào đường zigzag -->
+              <line x1="3.5" y1="20.5" x2="3.5" y2="13.5"/>
+              <line x1="9" y1="20.5" x2="9" y2="9.5"/>
+              <line x1="14.5" y1="20.5" x2="14.5" y2="13.5"/>
+              <line x1="20" y1="20.5" x2="20" y2="9.5"/>
+            </svg>
+          </div>
+          <span class="nav-label">Thị trường</span>
+        </div>
+
+        <!-- 3. Giao dịch -->
+        <div class="nav-item">
+          <div class="nav-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Chiếc búa thân to rộng hơn, nâng cao lên để tách biệt với line ngang -->
+              <g transform="translate(0, -2.5) rotate(22 7 18)">
+                <!-- Thân đầu búa to dày và rộng hơn về bề ngang -->
+                <rect x="3.8" y="5.5" width="6.6" height="12.5" rx="0.8"/>
+                <!-- Gờ viền 2 đầu búa (trên & dưới) -->
+                <line x1="2.2" y1="5.5" x2="12" y2="5.5"/>
+                <line x1="2.2" y1="18" x2="12" y2="18"/>
+                <!-- Cán búa to rộng, vươn sang phải -->
+                <path d="M10.4 10.2h9.8a1.8 1.8 0 0 1 0 3.6h-9.8"/>
+              </g>
+              <!-- Line ngang phẳng tuyệt đối 100% (y1 = 21.5, y2 = 21.5), sát mép dưới -->
+              <line x1="3" y1="21.5" x2="17" y2="21.5"/>
+            </svg>
+          </div>
+          <span class="nav-label">Giao dịch</span>
+        </div>
+
+        <!-- 4. Tài sản -->
+        <div class="nav-item">
+          <div class="nav-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2.8l7.8 4.5v9.4L12 21.2 4.2 16.7V7.3L12 2.8z"/>
+              <path d="M12 12L4.2 7.3"/>
+              <path d="M12 12l7.8-4.7"/>
+              <path d="M12 12v9.2"/>
+            </svg>
+          </div>
+          <span class="nav-label">Tài sản</span>
+        </div>
+
+        <!-- 5. Tất cả -->
+        <div class="nav-item">
+          <div class="nav-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5.2" y="2.2" width="5.5" height="5.5" rx="0.8" transform="rotate(45 7.95 4.95)"/>
+              <rect x="3.5" y="13.5" width="6.5" height="6.5" rx="1"/>
+              <rect x="14" y="13.5" width="6.5" height="6.5" rx="1"/>
+            </svg>
+            <span class="nav-badge-new">Mới</span>
+          </div>
+          <span class="nav-label">Tất cả</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== ADMIN PANEL ======================== -->
+    <div class="admin-panel">
+      <div class="admin-header">
+        <h2><i class="fas fa-sliders-h"></i> Bảng điều khiển dữ liệu</h2>
+        <p>Chỉnh sửa dữ liệu & cấu hình giao diện iOS</p>
+      </div>
+      <div class="admin-scroll">
+
+        <!-- STATUS BAR CONFIG -->
+        <div class="admin-section">
+          <div class="admin-section-title"><i class="fas fa-mobile-alt"></i> Cấu hình Status Bar</div>
+          <div class="config-grid">
+            <div class="editor-field">
+              <label class="editor-label">Thời gian</label>
+              <input class="editor-input" type="text" id="cfgTime" value="9:41" placeholder="9:41">
+            </div>
+            <div class="editor-field">
+              <label class="editor-label">Phần trăm pin (%)</label>
+              <input class="editor-input" type="number" min="1" max="100" id="cfgBattery" value="73" placeholder="73">
+            </div>
+          </div>
+          <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed #eee;">
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: #444; cursor: pointer; user-select: none;">
+              <input type="checkbox" id="cfgAutoRandomBattery" checked style="width: 16px; height: 16px; accent-color: #7A22C2; cursor: pointer;">
+              Tự động random pin khi bấm Cập nhật
+            </label>
+          </div>
+        </div>
+
+        <!-- STOCK EDITORS -->
+        <div class="admin-section" id="admin-stock-section">
+          <div class="admin-section-title"><i class="fas fa-chart-line"></i> Danh sách cổ phiếu</div>
+          <div id="admin-stock-list"></div>
+        </div>
+      </div>
+
+      <div class="admin-actions">
+        <button class="btn-add-stock" id="btnAddStock"><i class="fas fa-plus"></i> Thêm mã cổ phiếu</button>
+        <div class="admin-btn-row">
+          <button class="btn-update" id="btnUpdate"><i class="fas fa-sync-alt"></i> Cập nhật</button>
+          <button class="btn-screenshot" id="btnScreenshot"><i class="fas fa-camera"></i> Chụp ảnh</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toast-msg"></span></div>
+
+  <script>
+    // ============================================================
+    // DATA
+    // ============================================================
+    const DEFAULT_STOCKS = [
+      {
+        id:'vcb', ticker:'VCB', costPrice:56.6, marketPrice:60.10, prevPrice:59.20, volume:1994, expanded:false,
+        klThuong:1994, klFS:0, klCoTheBan:1994, outroom:0, klKhac:0, cpctThuong:0, klT0:0, klT1:0, klT2:0
+      },
+      {
+        id:'vic', ticker:'VIC', costPrice:220.4, marketPrice:236, prevPrice:232.0, volume:1700, expanded:false,
+        klThuong:1700, klFS:0, klCoTheBan:1700, outroom:0, klKhac:0, cpctThuong:0, klT0:0, klT1:0, klT2:0
+      },
+      {
+        id:'kbc', ticker:'KBC', costPrice:28.3, marketPrice:27.4, prevPrice:27.70, volume:5780, expanded:false,
+        klThuong:5780, klFS:0, klCoTheBan:5780, outroom:0, klKhac:0, cpctThuong:0, klT0:0, klT1:0, klT2:0
+      },
+    ];
+    let stocks = JSON.parse(JSON.stringify(DEFAULT_STOCKS));
+    let idCounter = 100;
+    let statusBarConfig = {
+      time: '9:41',
+      battery: 73,
+      autoRandomBattery: true
+    };
+    let isDataMasked = false;
+    let isVolumeHidden = false;
+
+    // ============================================================
+    // UTILITIES
+    // ============================================================
+    function formatNumber(n) {
+      if (n===0) return '0';
+      const neg = n<0; const s = Math.round(Math.abs(n)).toString();
+      let r=''; for(let i=s.length-1,c=0;i>=0;i--,c++){if(c>0&&c%3===0)r=','+r;r=s[i]+r;}
+      return neg?'-'+r:r;
+    }
+    function formatPrice(p) { if(p===Math.floor(p))return p.toString(); return p.toFixed(2).replace(/\.?0+$/,''); }
+    function formatVolume(v) { return formatNumber(v); }
+    function genId() { return 'stock_'+(++idCounter); }
+    function showToast(m) {
+      const t=document.getElementById('toast'); document.getElementById('toast-msg').textContent=m;
+      t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500);
+    }
+
+    // ============================================================
+    // CALCULATIONS
+    // ============================================================
+    function calcStock(s) {
+      const tc = Math.round(s.costPrice * 1000 * s.volume);
+      const tm = Math.round(s.marketPrice * 1000 * s.volume);
+      const prevP = s.prevPrice !== undefined ? s.prevPrice : s.marketPrice;
+      const todayPnl = Math.round((s.marketPrice - prevP) * 1000 * s.volume);
+      return {
+        totalCost: tc,
+        totalMarket: tm,
+        pnlAmount: tm - tc,
+        pnlPct: s.costPrice ? ((s.marketPrice - s.costPrice) / s.costPrice) * 100 : 0,
+        todayPnl: todayPnl
+      };
+    }
+    function calcPortfolio() {
+      let tc = 0, tm = 0, todayTotal = 0;
+      stocks.forEach(s => {
+        const c = calcStock(s);
+        tc += c.totalCost;
+        tm += c.totalMarket;
+        todayTotal += c.todayPnl;
+      });
+      return {
+        totalCost: tc,
+        totalMarket: tm,
+        pnlAmount: tm - tc,
+        pnlPct: tc ? ((tm - tc) / tc) * 100 : 0,
+        todayPnl: todayTotal
+      };
+    }
+
+    // ============================================================
+    // RENDER: STATUS BAR
+    // ============================================================
+    function renderStatusBar() {
+      const timeEl = document.getElementById('statusbarTime');
+      if (timeEl) timeEl.textContent = statusBarConfig.time || '9:41';
+
+      const battery = Math.min(100, Math.max(1, parseInt(statusBarConfig.battery) || 73));
+      const fillEl = document.getElementById('batteryFill');
+      const textEl = document.getElementById('batteryText');
+
+      if (fillEl) {
+        fillEl.style.width = `${battery}%`;
+      }
+
+      if (textEl) {
+        textEl.textContent = battery;
+        if (battery === 100) {
+          textEl.setAttribute('font-size', '10');
+          textEl.setAttribute('letter-spacing', '-0.3');
+        } else {
+          textEl.setAttribute('font-size', '12');
+          textEl.setAttribute('letter-spacing', '0');
+        }
+      }
+    }
+
+    // ============================================================
+    // RENDER: PHONE UI
+    // ============================================================
+    function renderPhoneUI() {
+      const p = calcPortfolio();
+      const pnlEl = document.getElementById('summary-pnl-amount');
+      const badgeWrap = document.getElementById('summary-pnl-badge-wrap');
+      const pctEl = document.getElementById('summary-pnl-pct');
+      const todayEl = document.getElementById('summary-today');
+      const totalCostEl = document.getElementById('summary-total-cost');
+      const totalMarketEl = document.getElementById('summary-total-market');
+      const eyeIcon = document.getElementById('toggleEye');
+
+      if (isDataMasked) {
+        if (eyeIcon) eyeIcon.className = 'far fa-eye eye-icon';
+        pnlEl.textContent = '***';
+        pnlEl.className = 'value neutral';
+        if (badgeWrap) badgeWrap.style.display = 'none';
+        if (todayEl) {
+          todayEl.textContent = '***';
+          todayEl.className = 'value neutral';
+        }
+        if (totalCostEl) totalCostEl.textContent = '***';
+        if (totalMarketEl) totalMarketEl.textContent = '***';
+      } else {
+        if (eyeIcon) eyeIcon.className = 'fas fa-eye-slash eye-icon';
+        pnlEl.textContent = formatNumber(p.pnlAmount);
+        pnlEl.className = 'value ' + (p.pnlAmount >= 0 ? 'profit' : 'loss');
+        if (badgeWrap) {
+          badgeWrap.style.display = '';
+          pctEl.textContent = `${p.pnlPct >= 0 ? '+' : ''}${p.pnlPct.toFixed(2)}%`;
+          pctEl.className = p.pnlAmount >= 0 ? 'loss-badge profit-badge' : 'loss-badge';
+        }
+        if (todayEl) {
+          if (p.todayPnl > 0) {
+            todayEl.textContent = '+' + formatNumber(p.todayPnl);
+            todayEl.className = 'value profit';
+          } else if (p.todayPnl < 0) {
+            todayEl.textContent = formatNumber(p.todayPnl);
+            todayEl.className = 'value loss';
+          } else {
+            todayEl.textContent = '0';
+            todayEl.className = 'value neutral';
+          }
+        }
+        if (totalCostEl) totalCostEl.textContent = formatNumber(p.totalCost);
+        if (totalMarketEl) totalMarketEl.textContent = formatNumber(p.totalMarket);
+      }
+
+      // Checkbox state
+      const checkboxBox = document.getElementById('hideVolCheckbox');
+      if (checkboxBox) checkboxBox.classList.toggle('checked', isVolumeHidden);
+
+      // Stock List Rendering
+      const el = document.getElementById('stock-list');
+      if (!stocks.length) {
+        el.innerHTML = '<div class="no-stocks"><i class="fas fa-inbox"></i>Chưa có mã cổ phiếu nào</div>';
+        return;
+      }
+
+      let h = '';
+      stocks.forEach(s => {
+        const c = calcStock(s);
+        const pnlCls = c.pnlPct >= 0 ? 'positive' : 'negative';
+        const pnlSign = c.pnlPct >= 0 ? '+' : '';
+        const dc = c.pnlAmount >= 0 ? 'profit' : 'loss';
+
+        const displayCostPrice = isDataMasked ? '***' : formatPrice(s.costPrice);
+        const displayMarketPrice = formatPrice(s.marketPrice);
+        const displayVolume = isVolumeHidden ? '***' : formatVolume(s.volume);
+        const displayPnl = isDataMasked ? '***' : (pnlSign + c.pnlPct.toFixed(2) + '%');
+        const pnlColClass = isDataMasked ? 'col-loss' : `col-loss ${pnlCls}`;
+
+        const detailTotalCost = isDataMasked ? '***' : formatNumber(c.totalCost);
+        const detailTotalMarket = isDataMasked ? '***' : formatNumber(c.totalMarket);
+        const detailPnlAmount = isDataMasked ? '***' : formatNumber(c.pnlAmount);
+        const detailDsCls = isDataMasked ? '' : dc;
+
+        const isVolMasked = isVolumeHidden;
+        const vTongKL = isVolMasked ? '***' : formatVolume(s.volume);
+        const vKlThuong = isVolMasked ? '***' : formatVolume(s.klThuong !== undefined ? s.klThuong : s.volume);
+        const vKlFS = isVolMasked ? '***' : formatVolume(s.klFS || 0);
+        const vKlCoTheBan = isVolMasked ? '***' : formatVolume(s.klCoTheBan !== undefined ? s.klCoTheBan : s.volume);
+        const vOutroom = isVolMasked ? '***' : formatVolume(s.outroom || 0);
+        const vKlKhac = isVolMasked ? '***' : formatVolume(s.klKhac || 0);
+        const vCpctThuong = isVolMasked ? '***' : formatVolume(s.cpctThuong || 0);
+        const vKlT0 = isVolMasked ? '***' : formatVolume(s.klT0 || 0);
+        const vKlT1 = isVolMasked ? '***' : formatVolume(s.klT1 || 0);
+        const vKlT2 = isVolMasked ? '***' : formatVolume(s.klT2 || 0);
+
+        h += `<div class="stock-row" data-stock-id="${s.id}">
+          <div class="stock-row-main" onclick="toggleStockDetail('${s.id}')">
+            <div class="stock-ticker">
+              <span class="name">${s.ticker}</span>
+              <i class="fas fa-chevron-down arrow ${s.expanded ? 'up' : ''}" id="arrow-${s.id}"></i>
+            </div>
+            <div class="col-val">${displayCostPrice}</div>
+            <div class="col-val">${displayMarketPrice}</div>
+            <div class="col-val col-volume">${displayVolume}</div>
+            <div class="${pnlColClass}">${displayPnl}</div>
+          </div>
+          <div class="stock-detail ${s.expanded ? 'show' : ''}" id="detail-${s.id}">
+            <!-- 1. Bảng Tóm tắt Số liệu Nhanh -->
+            <div class="detail-summary">
+              <div class="detail-summary-item">
+                <div class="ds-label">Tổng vốn</div>
+                <div class="ds-value">${detailTotalCost}</div>
+              </div>
+              <div class="detail-summary-item">
+                <div class="ds-label">Giá trị thị trường</div>
+                <div class="ds-value">${detailTotalMarket}</div>
+              </div>
+              <div class="detail-summary-item">
+                <div class="ds-label">Lãi / Lỗ</div>
+                <div class="ds-value ${detailDsCls}">${detailPnlAmount}</div>
+              </div>
+            </div>
+
+            <!-- 2. Khung Chi tiết Khối lượng (2 Cột tách biệt) -->
+            <div class="detail-grid">
+              <!-- Cột Trái: 1 Khối Card nền xám duy nhất -->
+              <div class="detail-card detail-card-left">
+                <div class="detail-row"><span class="dr-label bold">Tổng KL</span><span class="dr-value bold">${vTongKL}</span></div>
+                <div class="detail-row"><span class="dr-label">KL thường</span><span class="dr-value">${vKlThuong}</span></div>
+                <div class="detail-row"><span class="dr-label">KL FS</span><span class="dr-value">${vKlFS}</span></div>
+                <div class="detail-row"><span class="dr-label bold">KL có thể bán</span><span class="dr-value bold">${vKlCoTheBan}</span></div>
+                <div class="detail-row"><span class="dr-label">Outroom</span><span class="dr-value">${vOutroom}</span></div>
+              </div>
+
+              <!-- Cột Phải: Gồm 2 Khối Card xếp chồng lên nhau -->
+              <div class="detail-col-right">
+                <!-- Khối phía trên (KL Khác) -->
+                <div class="detail-card detail-card-top">
+                  <div class="detail-row"><span class="dr-label">KL Khác <i class="fas fa-info-circle info-icon"></i></span><span class="dr-value">${vKlKhac}</span></div>
+                  <div class="detail-row"><span class="dr-label">CPCT/Thưởng</span><span class="dr-value">${vCpctThuong}</span></div>
+                </div>
+
+                <!-- Khối phía dưới (KL mua chờ về) -->
+                <div class="detail-card detail-card-bottom">
+                  <div class="detail-section-title">KL mua chờ về</div>
+                  <div class="detail-row"><span class="dr-label">KL T0</span><span class="dr-value">${vKlT0}</span></div>
+                  <div class="detail-row"><span class="dr-label">KL T1</span><span class="dr-value">${vKlT1}</span></div>
+                  <div class="detail-row"><span class="dr-label">KL T2</span><span class="dr-value">${vKlT2}</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Cụm Nút Chức năng -->
+            <div class="detail-actions">
+              <button class="detail-btn detail-btn-buy">MUA</button>
+              <button class="detail-btn detail-btn-sell">BÁN</button>
+              <button class="detail-btn detail-btn-info">Thông tin mã</button>
+            </div>
+          </div>
+        </div>`;
+      });
+      el.innerHTML = h;
+    }
+
+    // ============================================================
+    // RENDER: ADMIN
+    // ============================================================
+    let activeAdminStockId = null;
+
+    function renderAdminPanel() {
+      const c = document.getElementById('admin-stock-list');
+      if (!stocks.length) {
+        c.innerHTML = `
+          <div style="text-align:center;padding:30px 10px;color:#bbb;">
+            <i class="fas fa-folder-open" style="font-size:28px;margin-bottom:10px;display:block;"></i>
+            <div style="font-size:13px;margin-bottom:12px;">Chưa có mã cổ phiếu nào.</div>
+            <button type="button" class="admin-tab-add" onclick="addStock()" style="margin:0 auto;padding:8px 16px;font-size:13px;"><i class="fas fa-plus"></i> Thêm mã mới</button>
+          </div>`;
+        return;
+      }
+
+      if (!activeAdminStockId || !stocks.some(s => s.id === activeAdminStockId)) {
+        activeAdminStockId = stocks[0].id;
+      }
+
+      let tabsHtml = `<div class="admin-stock-tabs">`;
+      stocks.forEach((s, i) => {
+        const isActive = (s.id === activeAdminStockId);
+        tabsHtml += `
+          <button type="button" class="admin-tab-btn ${isActive ? 'active' : ''}" data-tab-stock-id="${s.id}" onclick="selectAdminStockTab('${s.id}')">
+            <span>#${i+1} — ${s.ticker || 'Mã mới'}</span>
+          </button>`;
+      });
+      tabsHtml += `
+        <button type="button" class="admin-tab-add" onclick="addStock()" title="Thêm mã mới">
+          <i class="fas fa-plus"></i> Thêm mã
+        </button>
+      </div>`;
+
+      let editorsHtml = '';
+      stocks.forEach((s, i) => {
+        const isActive = (s.id === activeAdminStockId);
+        editorsHtml += `
+          <div class="stock-editor ${isActive ? 'active' : ''}" data-stock-id="${s.id}">
+            <div class="stock-editor-header">
+              <span class="stock-editor-title">#${i+1} — ${s.ticker || 'Mã mới'}</span>
+              <button type="button" class="stock-editor-remove" onclick="removeStock('${s.id}')" title="Xóa mã này"><i class="fas fa-trash-alt"></i> Xóa mã</button>
+            </div>
+            <div class="editor-grid">
+              <div class="editor-field full"><label class="editor-label">Mã CP</label><input class="editor-input" type="text" value="${s.ticker}" data-stock-id="${s.id}" data-field="ticker" placeholder="VCB" maxlength="10" style="text-transform:uppercase;"></div>
+              <div class="editor-field"><label class="editor-label">Giá vốn</label><input class="editor-input" type="number" step="0.01" min="0" value="${s.costPrice}" data-stock-id="${s.id}" data-field="costPrice" placeholder="56.6"></div>
+              <div class="editor-field"><label class="editor-label">Giá TT</label><input class="editor-input" type="number" step="0.01" min="0" value="${s.marketPrice}" data-stock-id="${s.id}" data-field="marketPrice" placeholder="60.10"></div>
+              <div class="editor-field"><label class="editor-label">Giá TT hôm qua</label><input class="editor-input" type="number" step="0.01" min="0" value="${s.prevPrice!==undefined?s.prevPrice:s.marketPrice}" data-stock-id="${s.id}" data-field="prevPrice" placeholder="59.20"></div>
+              <div class="editor-field"><label class="editor-label">Khối lượng (Tổng KL)</label><input class="editor-input" type="number" step="1" min="0" value="${s.volume}" data-stock-id="${s.id}" data-field="volume" placeholder="1994"></div>
+            </div>
+            <div style="margin-top:10px;padding-top:8px;border-top:1px dashed #eee;">
+              <span style="font-size:10.5px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:0.04em;display:block;margin-bottom:6px;">Chi tiết Khối lượng (Khung mở rộng)</span>
+              <div class="editor-grid">
+                <div class="editor-field"><label class="editor-label">KL Thường</label><input class="editor-input" type="number" step="1" min="0" value="${s.klThuong!==undefined?s.klThuong:s.volume}" data-stock-id="${s.id}" data-field="klThuong"></div>
+                <div class="editor-field"><label class="editor-label">KL FS</label><input class="editor-input" type="number" step="1" min="0" value="${s.klFS||0}" data-stock-id="${s.id}" data-field="klFS"></div>
+                <div class="editor-field"><label class="editor-label">KL Có Thể Bán</label><input class="editor-input" type="number" step="1" min="0" value="${s.klCoTheBan!==undefined?s.klCoTheBan:s.volume}" data-stock-id="${s.id}" data-field="klCoTheBan"></div>
+                <div class="editor-field"><label class="editor-label">Outroom</label><input class="editor-input" type="number" step="1" min="0" value="${s.outroom||0}" data-stock-id="${s.id}" data-field="outroom"></div>
+                <div class="editor-field"><label class="editor-label">KL Khác</label><input class="editor-input" type="number" step="1" min="0" value="${s.klKhac||0}" data-stock-id="${s.id}" data-field="klKhac"></div>
+                <div class="editor-field"><label class="editor-label">CPCT/Thưởng</label><input class="editor-input" type="number" step="1" min="0" value="${s.cpctThuong||0}" data-stock-id="${s.id}" data-field="cpctThuong"></div>
+                <div class="editor-field"><label class="editor-label">KL T0</label><input class="editor-input" type="number" step="1" min="0" value="${s.klT0||0}" data-stock-id="${s.id}" data-field="klT0"></div>
+                <div class="editor-field"><label class="editor-label">KL T1</label><input class="editor-input" type="number" step="1" min="0" value="${s.klT1||0}" data-stock-id="${s.id}" data-field="klT1"></div>
+                <div class="editor-field full"><label class="editor-label">KL T2</label><input class="editor-input" type="number" step="1" min="0" value="${s.klT2||0}" data-stock-id="${s.id}" data-field="klT2"></div>
+              </div>
+            </div>
+          </div>`;
+      });
+      c.innerHTML = tabsHtml + editorsHtml;
+    }
+
+    function selectAdminStockTab(sid) {
+      activeAdminStockId = sid;
+      document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tabStockId === sid);
+      });
+      document.querySelectorAll('.stock-editor').forEach(card => {
+        card.classList.toggle('active', card.dataset.stockId === sid);
+      });
+    }
+
+    // ============================================================
+    // STORAGE & PERSISTENCE
+    // ============================================================
+    function saveState() {
+      try {
+        localStorage.setItem('vps_stocks_data_v5', JSON.stringify(stocks));
+        localStorage.setItem('vps_statusbar_cfg_v5', JSON.stringify(statusBarConfig));
+        localStorage.setItem('vps_is_data_masked', JSON.stringify(isDataMasked));
+        localStorage.setItem('vps_is_volume_hidden', JSON.stringify(isVolumeHidden));
+      } catch (e) {
+        console.warn('localStorage not available', e);
+      }
+    }
+
+    function loadState() {
+      try {
+        const savedStocks = localStorage.getItem('vps_stocks_data_v5');
+        if (savedStocks) {
+          const parsed = JSON.parse(savedStocks);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            stocks = parsed;
+          }
+        }
+        const savedSB = localStorage.getItem('vps_statusbar_cfg_v5');
+        if (savedSB) {
+          statusBarConfig = Object.assign(statusBarConfig, JSON.parse(savedSB));
+          const timeInput = document.getElementById('cfgTime');
+          if (timeInput) timeInput.value = statusBarConfig.time;
+          const battInput = document.getElementById('cfgBattery');
+          if (battInput) battInput.value = statusBarConfig.battery;
+          const randChk = document.getElementById('cfgAutoRandomBattery');
+          if (randChk) randChk.checked = (statusBarConfig.autoRandomBattery !== false);
+        }
+        const savedMask = localStorage.getItem('vps_is_data_masked');
+        if (savedMask !== null) isDataMasked = JSON.parse(savedMask);
+        const savedVol = localStorage.getItem('vps_is_volume_hidden');
+        if (savedVol !== null) isVolumeHidden = JSON.parse(savedVol);
+      } catch (e) {
+        console.warn('localStorage not available', e);
+      }
+    }
+
+    // ============================================================
+    // ACTIONS
+    // ============================================================
+    function readInputsAndUpdate() {
+      statusBarConfig.time = document.getElementById('cfgTime').value || '9:41';
+      const randChk = document.getElementById('cfgAutoRandomBattery');
+      statusBarConfig.autoRandomBattery = randChk ? randChk.checked : true;
+
+      let battMsg = '';
+      if (statusBarConfig.autoRandomBattery) {
+        // Random dung lượng pin 1 - 100
+        const randBattery = Math.floor(Math.random() * 100) + 1;
+        statusBarConfig.battery = randBattery;
+        const battInput = document.getElementById('cfgBattery');
+        if (battInput) battInput.value = randBattery;
+        battMsg = ` (Pin: ${randBattery}%)`;
+      } else {
+        const battInput = document.getElementById('cfgBattery');
+        const customBatt = parseInt(battInput.value);
+        statusBarConfig.battery = !isNaN(customBatt) ? Math.min(100, Math.max(1, customBatt)) : 73;
+        battMsg = ` (Pin: ${statusBarConfig.battery}%)`;
+      }
+
+      document.querySelectorAll('#admin-stock-list .editor-input').forEach(inp => {
+        const sid=inp.dataset.stockId, f=inp.dataset.field, s=stocks.find(x=>x.id===sid);
+        if(!s)return;
+        if(f==='ticker') s.ticker=inp.value.toUpperCase().trim();
+        else if(f==='costPrice') s.costPrice=parseFloat(inp.value)||0;
+        else if(f==='marketPrice') s.marketPrice=parseFloat(inp.value)||0;
+        else if(f==='prevPrice') s.prevPrice=parseFloat(inp.value)||0;
+        else if(f==='volume') {
+          s.volume=parseInt(inp.value)||0;
+          if(s.klThuong===undefined) s.klThuong = s.volume;
+          if(s.klCoTheBan===undefined) s.klCoTheBan = s.volume;
+        }
+        else if(f==='klThuong') s.klThuong=parseInt(inp.value)||0;
+        else if(f==='klFS') s.klFS=parseInt(inp.value)||0;
+        else if(f==='klCoTheBan') s.klCoTheBan=parseInt(inp.value)||0;
+        else if(f==='outroom') s.outroom=parseInt(inp.value)||0;
+        else if(f==='klKhac') s.klKhac=parseInt(inp.value)||0;
+        else if(f==='cpctThuong') s.cpctThuong=parseInt(inp.value)||0;
+        else if(f==='klT0') s.klT0=parseInt(inp.value)||0;
+        else if(f==='klT1') s.klT1=parseInt(inp.value)||0;
+        else if(f==='klT2') s.klT2=parseInt(inp.value)||0;
+      });
+      saveState();
+      renderAdminPanel(); renderPhoneUI(); renderStatusBar();
+      showToast(`Đã cập nhật dữ liệu${battMsg}!`);
+    }
+
+    function addStock() {
+      const id = genId();
+      stocks.push({
+        id, ticker:'', costPrice:0, marketPrice:0, prevPrice:0, volume:0, expanded:false,
+        klThuong:0, klFS:0, klCoTheBan:0, outroom:0, klKhac:0, cpctThuong:0, klT0:0, klT1:0, klT2:0
+      });
+      activeAdminStockId = id;
+      saveState();
+      renderAdminPanel(); renderPhoneUI();
+      setTimeout(() => {
+        const tab = document.querySelector(`.admin-tab-btn[data-tab-stock-id="${id}"]`);
+        if (tab) tab.scrollIntoView({ behavior: 'smooth', inline: 'nearest' });
+        const inp = document.querySelector(`[data-stock-id="${id}"] .editor-input`);
+        if (inp) inp.focus();
+      }, 50);
+    }
+
+    function removeStock(sid) {
+      const idx = stocks.findIndex(s => s.id === sid);
+      stocks = stocks.filter(s => s.id !== sid);
+      if (activeAdminStockId === sid) {
+        activeAdminStockId = stocks[idx] ? stocks[idx].id : (stocks[idx-1] ? stocks[idx-1].id : (stocks[0] ? stocks[0].id : null));
+      }
+      saveState();
+      renderAdminPanel(); renderPhoneUI();
+      showToast('Đã xóa mã cổ phiếu');
+    }
+
+    function toggleStockDetail(sid) {
+      const s=stocks.find(x=>x.id===sid); if(!s)return; s.expanded=!s.expanded;
+      const d=document.getElementById('detail-'+sid), a=document.getElementById('arrow-'+sid);
+      if(d)d.classList.toggle('show',s.expanded); if(a)a.classList.toggle('up',s.expanded);
+    }
+
+    // ============================================================
+    // SCREENSHOT
+    // ============================================================
+    function captureScreenshot() {
+      const btn=document.getElementById('btnScreenshot');
+      btn.classList.add('capturing');
+      btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Đang chụp...';
+      requestAnimationFrame(()=>{
+        html2canvas(document.getElementById('phoneWrapper'),{
+          useCORS:true, allowTaint:true, scale:2,
+          backgroundColor:null, logging:false,
+          onclone:function(doc){
+            const w=doc.getElementById('phoneWrapper');
+            if(w) w.style.boxShadow='none';
+          }
+        }).then(canvas=>{
+          const a=document.createElement('a');
+          const d=new Date();
+          a.download=`VPS_Screenshot_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}_${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}${String(d.getSeconds()).padStart(2,'0')}.png`;
+          a.href=canvas.toDataURL('image/png',1.0); a.click();
+          showToast('Đã chụp & tải ảnh thành công!');
+        }).catch(()=>showToast('Lỗi khi chụp ảnh. Thử lại!')).finally(()=>{
+          btn.classList.remove('capturing');
+          btn.innerHTML='<i class="fas fa-camera"></i> Chụp ảnh';
+        });
+      });
+    }
+
+    // ============================================================
+    // EVENTS
+    // ============================================================
+    document.getElementById('btnUpdate').addEventListener('click', readInputsAndUpdate);
+    document.getElementById('btnAddStock').addEventListener('click', addStock);
+    document.getElementById('btnScreenshot').addEventListener('click', captureScreenshot);
+    document.querySelectorAll('.account-tab').forEach(t=>{
+      t.addEventListener('click',function(){document.querySelectorAll('.account-tab').forEach(x=>x.classList.remove('active'));this.classList.add('active');});
+    });
+    document.querySelectorAll('.portfolio-tab').forEach(pt=>{
+      pt.addEventListener('click',function(){
+        document.querySelectorAll('.portfolio-tab').forEach(x=>{ x.classList.add('inactive'); x.classList.remove('active'); });
+        this.classList.remove('inactive'); this.classList.add('active');
+      });
+    });
+    document.getElementById('toggleEye').addEventListener('click', function(e) {
+      e.stopPropagation();
+      isDataMasked = !isDataMasked;
+      saveState();
+      renderPhoneUI();
+    });
+
+    document.getElementById('toggleHideVol').addEventListener('click', function(e) {
+      isVolumeHidden = !isVolumeHidden;
+      saveState();
+      renderPhoneUI();
+    });
+    document.querySelector('.admin-scroll').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();readInputsAndUpdate();}});
+    document.getElementById('admin-stock-list').addEventListener('input',function(e){
+      if(e.target.dataset&&e.target.dataset.field==='ticker'){
+        const card=e.target.closest('.stock-editor');
+        const sid=e.target.dataset.stockId;
+        const title=card.querySelector('.stock-editor-title');
+        const idx=stocks.findIndex(s=>s.id===sid);
+        const tickerName=e.target.value.toUpperCase().trim()||'Mã mới';
+        if(title) title.textContent=`#${idx+1} — ${tickerName}`;
+        const tabBtn=document.querySelector(`.admin-tab-btn[data-tab-stock-id="${sid}"] span`);
+        if(tabBtn) tabBtn.textContent=`#${idx+1} — ${tickerName}`;
+      } else if(e.target.dataset&&e.target.dataset.field==='volume'){
+        const card=e.target.closest('.stock-editor');
+        const volVal=e.target.value;
+        const klThuongInp=card.querySelector('.editor-input[data-field="klThuong"]');
+        const klCoTheBanInp=card.querySelector('.editor-input[data-field="klCoTheBan"]');
+        if(klThuongInp) klThuongInp.value=volVal;
+        if(klCoTheBanInp) klCoTheBanInp.value=volVal;
+      }
+    });
+
+    // Live update status bar inputs
+    document.getElementById('cfgTime').addEventListener('input', function(e) {
+      statusBarConfig.time = e.target.value || '9:41';
+      saveState();
+      renderStatusBar();
+    });
+    document.getElementById('cfgBattery').addEventListener('input', function(e) {
+      const val = parseInt(e.target.value);
+      if (!isNaN(val)) {
+        statusBarConfig.battery = Math.min(100, Math.max(1, val));
+        saveState();
+        renderStatusBar();
+      }
+    });
+    document.getElementById('cfgAutoRandomBattery').addEventListener('change', function(e) {
+      statusBarConfig.autoRandomBattery = e.target.checked;
+      saveState();
+    });
+
+    // Bottom Navigation click handling
+    document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('.bottom-nav .nav-item').forEach(x => x.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    loadState();
+    renderStatusBar();
+    renderAdminPanel();
+    renderPhoneUI();
+  </script>
+</body>
+</html>

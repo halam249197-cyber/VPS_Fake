@@ -168,48 +168,54 @@
       padding: 6px 16px 8px; background: #fff; flex-shrink: 0;
     }
     .header .back-btn {
-      font-size: 20px; color: #1a1a1a; cursor: pointer;
+      color: #1a1a1a; cursor: pointer;
       width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.15s;
     }
-    .header .title { font-size: 18px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.02em; }
+    .header .back-btn:hover { opacity: 0.7; }
+    .header .title { font-size: 17px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.02em; }
     .header .search-btn {
-      font-size: 19px; color: #1a1a1a; cursor: pointer;
+      color: #1a1a1a; cursor: pointer;
       width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.15s;
     }
+    .header .search-btn:hover { opacity: 0.7; }
 
     /* ===== ACCOUNT TABS ===== */
     .account-tabs {
-      display: flex; border-bottom: 1px solid #e8e8e8;
+      display: flex; border-bottom: 1px solid #ECECEC;
       background: #fff; flex-shrink: 0; padding: 0 16px;
     }
     .account-tab {
       flex: 1; text-align: center; padding: 10px 4px 12px;
-      font-size: 14px; font-weight: 400; color: #666;
+      font-size: 12px; font-weight: 400; color: #737579;
       cursor: pointer; position: relative; display: flex;
-      align-items: center; justify-content: center; gap: 5px;
+      align-items: center; justify-content: center; gap: 4px;
       transition: color 0.2s; letter-spacing: -0.01em; line-height: 1.3;
     }
     .account-tab.active { color: #1a1a1a; font-weight: 600; }
     .account-tab.active::after {
       content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
-      height: 2.5px; background: #7A22C2; border-radius: 3px 3px 0 0;
+      height: 2.5px; background: #7A26D6; border-radius: 3px 3px 0 0;
     }
     .tab-badge {
       display: inline-flex; align-items: center; justify-content: center;
-      min-width: 18px; height: 18px; border-radius: 9px;
-      font-size: 11px; font-weight: 600; padding: 0 5px;
+      width: 17px; height: 17px; border-radius: 50%;
+      font-size: 10px; font-weight: 500;
+      background: #777880; color: #ffffff;
+      flex-shrink: 0; line-height: 1;
     }
-    .account-tab.active .tab-badge { background: #7A22C2; color: #fff; }
-    .account-tab:not(.active) .tab-badge { background: #e0e0e0; color: #666; }
+    .account-tab.active .tab-badge { background: #7A26D6; color: #ffffff; }
+    .account-tab:not(.active) .tab-badge { background: #777880; color: #ffffff; }
 
     /* ===== SCROLLABLE CONTENT ===== */
     .content-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; background: #fff; scrollbar-width: none; }
     .content-scroll::-webkit-scrollbar { display: none; }
     .swipe-indicator { display: flex; justify-content: center; padding: 10px 0 4px; }
-    .swipe-indicator .bar { width: 40px; height: 4px; background: #d0d0d0; border-radius: 2px; }
+    .swipe-indicator .bar { width: 38px; height: 4px; background: #C2C5CE; border-radius: 2px; }
     .portfolio-tabs { display: flex; gap: 16px; padding: 12px 16px 8px; align-items: baseline; }
-    .portfolio-tab { font-size: 18px; font-weight: 600; color: #1a1a1a; cursor: pointer; letter-spacing: -0.015em; line-height: 1.2; }
-    .portfolio-tab.inactive { font-size: 15px; font-weight: 400; color: #8E8E93; letter-spacing: -0.01em; }
+    .portfolio-tab { font-size: 16.5px; font-weight: 700; color: #1a1a1a; cursor: pointer; letter-spacing: -0.015em; line-height: 1.2; }
+    .portfolio-tab.inactive { font-size: 14px; font-weight: 400; color: #737579; letter-spacing: -0.01em; }
 
     /* ===== SUMMARY CARD ===== */
     .summary-card {
@@ -217,7 +223,7 @@
       border: none;
       border-radius: 12px;
       padding: 11px 14px;
-      background-color: #F4F5F9;
+      background-color: #F6F5FA;
       box-shadow: none;
     }
     .summary-row {
@@ -230,26 +236,48 @@
     .summary-row .label {
       font-size: 13.5px;
       font-weight: 400;
-      color: #333;
+      color: #333333;
       display: flex;
       align-items: center;
       letter-spacing: -0.01em;
     }
     .summary-row .label .info-icon {
-      color: #b5b5b5;
-      font-size: 12px;
+      width: 14px;
+      height: 14px;
+      color: #5E6068;
       cursor: pointer;
       margin-left: 4px;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+    .summary-row .label .info-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
     .summary-row .label .eye-icon {
-      font-size: 13.5px;
-      color: #888;
+      width: 17px;
+      height: 17px;
+      color: #565A5D;
       cursor: pointer;
       margin-left: 5px;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      flex-shrink: 0;
+      transition: opacity 0.15s;
+    }
+    .summary-row .label .eye-icon:hover {
+      opacity: 0.7;
+    }
+    .summary-row .label .eye-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
     .summary-row .value {
       font-size: 13.5px;
@@ -302,7 +330,7 @@
       align-items: center;
       gap: 7px;
       font-size: 13.5px;
-      font-weight: 500;
+      font-weight: 400;
       color: #333333;
       cursor: pointer;
       letter-spacing: -0.01em;
@@ -334,11 +362,11 @@
     .checkbox-box.checked svg {
       display: block;
     }
-    .sell-multi-btn { border: 1.5px solid #c62828; border-radius: 20px; padding: 8px 20px; font-size: 14px; font-weight: 500; color: #c62828; background: #fff; cursor: pointer; transition: all 0.2s; font-family: inherit; letter-spacing: -0.01em; }
+    .sell-multi-btn { border: 1px solid #c62828; border-radius: 20px; padding: 5px 14px; font-size: 12px; font-weight: 400; color: #c62828; background: #fff; cursor: pointer; transition: all 0.2s; font-family: inherit; letter-spacing: -0.01em; }
     .sell-multi-btn:hover { background: #fef0f0; }
 
     /* ===== STOCK TABLE ===== */
-    .stock-table-header { display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr 1fr; padding: 12px 16px 8px; font-size: 12px; font-weight: 500; color: #999; text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.3; }
+    .stock-table-header { display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr 1fr; margin: 2px 14px 4px; padding: 6px 2px; background: #F4F5F9; border-radius: 4px; font-size: 11px; font-weight: 400; color: #5E5E66; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.25; }
     .stock-table-header .col-kl { display: flex; align-items: center; justify-content: center; gap: 2px; }
     .stock-table-header .col-kl .sort-icon { font-size: 10px; }
     .stock-table-header > div:nth-child(2), .stock-table-header > div:nth-child(3), .stock-table-header > div:nth-child(4) { text-align: center; }
@@ -347,14 +375,14 @@
     .stock-row-main { display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr 1fr; padding: 16px; align-items: center; cursor: pointer; transition: background 0.15s; }
     .stock-row-main:hover { background: #fafafa; }
     .stock-ticker { display: flex; align-items: center; gap: 4px; }
-    .stock-ticker .name { font-size: 15px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.01em; }
+    .stock-ticker .name { font-size: 13px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.01em; line-height: 1.25; }
     .stock-ticker .name.positive { color: #1a8a3f; }
     .stock-ticker .name.negative { color: #c62828; }
     .stock-ticker .name.neutral { color: #1a1a1a; }
-    .stock-ticker .arrow { font-size: 10px; color: #aaa; transition: transform 0.2s; }
+    .stock-ticker .arrow { width: 8px; height: 5px; color: #666; transition: transform 0.2s; flex-shrink: 0; display: inline-block; }
     .stock-ticker .arrow.up { transform: rotate(180deg); }
-    .stock-row-main .col-val { text-align: center; font-size: 14.5px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.02em; }
-    .stock-row-main .col-loss { text-align: right; font-size: 14.5px; font-weight: 700; letter-spacing: -0.02em; }
+    .stock-row-main .col-val { text-align: center; font-size: 13px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.01em; line-height: 1.25; }
+    .stock-row-main .col-loss { text-align: right; font-size: 13px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.25; }
     .col-loss.negative { color: #c62828; }
     .col-loss.positive { color: #1a8a3f; }
     .col-loss.neutral { color: #1a1a1a; }
@@ -443,8 +471,19 @@
       color: #1a1a1a;
     }
     .detail-row .dr-label .info-icon {
-      font-size: 10.5px;
-      color: #999;
+      width: 12px;
+      height: 12px;
+      color: #737579;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      margin-left: 3px;
+    }
+    .detail-row .dr-label .info-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
     .detail-row .dr-value {
       font-weight: 500;
@@ -483,24 +522,24 @@
     .bottom-actions {
       display: flex;
       gap: 12px;
-      padding: 8px 16px;
+      padding: 11px 16px;
       background: #fff;
       border-top: 1px solid #eeeeee;
       flex-shrink: 0;
     }
     .btn-buy, .btn-sell {
       flex: 1;
-      height: 42px;
+      height: 33px;
       border: none;
-      border-radius: 21px;
-      font-size: 15px;
-      font-weight: 700;
+      border-radius: 17px;
+      font-size: 13.5px;
+      font-weight: 400;
       color: #fff;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.02em;
       transition: opacity 0.2s, transform 0.1s;
       font-family: inherit;
     }
@@ -750,9 +789,13 @@
 
       <!-- HEADER -->
       <div class="header">
-        <div class="back-btn"><i class="fas fa-chevron-left"></i></div>
+        <div class="back-btn">
+          <svg width="10" height="17" viewBox="0 0 10 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1.5L1.5 9L9 16.5"/></svg>
+        </div>
         <div class="title">Cổ phiếu</div>
-        <div class="search-btn"><i class="fas fa-search"></i></div>
+        <div class="search-btn">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="7"/><path d="M20.5 20.5L15.5 15.5"/></svg>
+        </div>
       </div>
 
       <!-- ACCOUNT TABS -->
@@ -771,18 +814,18 @@
         </div>
         <div class="summary-card">
           <div class="summary-row">
-            <div class="label">Lãi lỗ danh mục <i class="fas fa-eye-slash eye-icon" id="toggleEye"></i></div>
+            <div class="label">Lãi lỗ danh mục <span class="eye-icon" id="toggleEye"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg></span></div>
             <div class="summary-main-value">
               <div class="value loss" id="summary-pnl-amount">-63,061,964</div>
               <div id="summary-pnl-badge-wrap"><span class="loss-badge" id="summary-pnl-pct">-19.65%</span></div>
             </div>
           </div>
           <div class="summary-row">
-            <div class="label">Lãi/Lỗ hôm nay <i class="fas fa-info-circle info-icon"></i></div>
+            <div class="label">Lãi/Lỗ hôm nay <span class="info-icon"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.55"/><circle cx="8" cy="5.2" r="0.95" fill="currentColor"/><path d="M8 7.2V11.2" stroke="currentColor" stroke-width="1.55" stroke-linecap="round"/></svg></span></div>
             <div class="value neutral" id="summary-today">0</div>
           </div>
           <div class="summary-row">
-            <div class="label">Tổng vốn <i class="fas fa-info-circle info-icon"></i></div>
+            <div class="label">Tổng vốn <span class="info-icon"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.55"/><circle cx="8" cy="5.2" r="0.95" fill="currentColor"/><path d="M8 7.2V11.2" stroke="currentColor" stroke-width="1.55" stroke-linecap="round"/></svg></span></div>
             <div class="value neutral" id="summary-total-cost">320,867,364</div>
           </div>
           <div class="summary-row">
@@ -961,6 +1004,10 @@
     let isDataMasked = false;
     let isVolumeHidden = false;
 
+    const SVG_EYE_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+    const SVG_EYE_SLASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>';
+    const SVG_INFO_ICON = '<svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.55"/><circle cx="8" cy="5.2" r="0.95" fill="currentColor"/><path d="M8 7.2V11.2" stroke="currentColor" stroke-width="1.55" stroke-linecap="round"/></svg>';
+
     // ============================================================
     // UTILITIES
     // ============================================================
@@ -1052,7 +1099,7 @@
       const eyeIcon = document.getElementById('toggleEye');
 
       if (isDataMasked) {
-        if (eyeIcon) eyeIcon.className = 'far fa-eye eye-icon';
+        if (eyeIcon) eyeIcon.innerHTML = SVG_EYE_OPEN;
         pnlEl.textContent = '***';
         pnlEl.className = 'value neutral';
         if (badgeWrap) badgeWrap.style.display = 'none';
@@ -1063,7 +1110,7 @@
         if (totalCostEl) totalCostEl.textContent = '***';
         if (totalMarketEl) totalMarketEl.textContent = '***';
       } else {
-        if (eyeIcon) eyeIcon.className = 'fas fa-eye-slash eye-icon';
+        if (eyeIcon) eyeIcon.innerHTML = SVG_EYE_SLASH;
         pnlEl.textContent = formatNumber(p.pnlAmount);
         pnlEl.className = 'value ' + (p.pnlAmount >= 0 ? 'profit' : 'loss');
         if (badgeWrap) {
@@ -1139,7 +1186,7 @@
           <div class="stock-row-main" onclick="toggleStockDetail('${s.id}')">
             <div class="stock-ticker">
               <span class="name ${pnlCls}">${s.ticker}</span>
-              <i class="fas fa-chevron-down arrow ${s.expanded ? 'up' : ''}" id="arrow-${s.id}"></i>
+              <svg class="arrow ${s.expanded ? 'up' : ''}" id="arrow-${s.id}" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg>
             </div>
             <div class="col-val">${displayCostPrice}</div>
             <div class="col-val">${displayMarketPrice}</div>
@@ -1178,7 +1225,7 @@
               <div class="detail-col-right">
                 <!-- Khối phía trên (KL Khác) -->
                 <div class="detail-card detail-card-top">
-                  <div class="detail-row"><span class="dr-label">KL Khác <i class="fas fa-info-circle info-icon"></i></span><span class="dr-value">${vKlKhac}</span></div>
+                  <div class="detail-row"><span class="dr-label">KL Khác <span class="info-icon">${SVG_INFO_ICON}</span></span><span class="dr-value">${vKlKhac}</span></div>
                   <div class="detail-row"><span class="dr-label">CPCT/Thưởng</span><span class="dr-value">${vCpctThuong}</span></div>
                 </div>
 

@@ -280,7 +280,7 @@
       display: block;
     }
     .summary-row .value {
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 600;
       color: #1a1a1a;
       text-align: right;
@@ -296,7 +296,7 @@
       align-items: flex-end;
     }
     .summary-main-value .value {
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 600;
       letter-spacing: -0.01em;
       line-height: 1.25;
@@ -305,17 +305,19 @@
       display: inline-block;
       border: 1px solid #c62828;
       border-radius: 10px;
-      padding: 0.5px 6px;
-      font-size: 11px;
-      font-weight: 600;
+      padding: 0.5px 3.5px;
+      font-size: 13px;
+      font-weight: 400;
       color: #c62828;
+      background-color: rgba(198, 40, 40, 0.1);
       margin-top: 2px;
       letter-spacing: -0.01em;
-      line-height: 1.2;
+      line-height: 1.15;
     }
     .loss-badge.profit-badge {
       border-color: #1a8a3f;
       color: #1a8a3f;
+      background-color: rgba(26, 138, 63, 0.1);
     }
 
     /* ===== CONTROLS ===== */
@@ -362,7 +364,7 @@
     .checkbox-box.checked svg {
       display: block;
     }
-    .sell-multi-btn { border: 1px solid #c62828; border-radius: 20px; padding: 5px 14px; font-size: 12px; font-weight: 400; color: #c62828; background: #fff; cursor: pointer; transition: all 0.2s; font-family: inherit; letter-spacing: -0.01em; }
+    .sell-multi-btn { border: 1px solid #c62828; border-radius: 20px; padding: 3.5px 10px; font-size: 12px; font-weight: 400; color: #c62828; background: #fff; cursor: pointer; transition: all 0.2s; font-family: inherit; letter-spacing: -0.01em; }
     .sell-multi-btn:hover { background: #fef0f0; }
 
     /* ===== STOCK TABLE ===== */
@@ -375,7 +377,7 @@
     .stock-row-main { display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr 1fr; padding: 16px; align-items: center; cursor: pointer; transition: background 0.15s; }
     .stock-row-main:hover { background: #fafafa; }
     .stock-ticker { display: flex; align-items: center; gap: 4px; }
-    .stock-ticker .name { font-size: 13px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.01em; line-height: 1.25; }
+    .stock-ticker .name { font-family: sans-serif; font-size: 13px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.01em; line-height: 1.25; }
     .stock-ticker .name.positive { color: #1a8a3f; }
     .stock-ticker .name.negative { color: #c62828; }
     .stock-ticker .name.neutral { color: #1a1a1a; }
